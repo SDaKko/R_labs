@@ -1,0 +1,178 @@
+library(openxlsx)
+# Импорт данных из CSV-файла
+data_csv <- read.csv("football_ratings.csv", header = TRUE, sep = ",")
+print("Данные из CSV-файла:")
+print(head(data_csv))
+
+# Импорт данных из xlsx-файла
+data <- read.xlsx("football_ratings.xlsx", sheet = 1, rows = 1:22, cols = 2:17)
+data
+
+# Дескриптивный анализ данных
+sd_values <- apply(data[, -1], 2, sd, na.rm = TRUE)
+disperion_values <- apply(data[, -1], 2, var, na.rm = TRUE)
+IQR_values <- apply(data[, -1], 2, IQR, na.rm = TRUE)
+
+print("Стандартное отклонение:")
+print(sd_values)
+print("Дисперсия:")
+print(disperion_values)
+print("Межквартильный размах:")
+print(IQR_values)
+
+# Описательные статистики для каждого клуба
+summary_stats <- summary(data[, -1])
+print("Описательные статистики для каждого клуба:")
+print(summary_stats)
+
+general_data <- unlist(data[, -1])
+
+# Гистограмма для всех клубов
+hist(general_data, main = "Гистограмма оценок для клубов", 
+     xlab = "Оценка", ylab = "Частота", col = "lightblue")
+
+# Гистограмма для одного из клубов (например, Краснодар)
+hist(data$Краснодар, main = "Гистограмма оценок для клуба Краснодар", 
+     xlab = "Оценка", ylab = "Частота", col = "lightblue")
+
+# Боксплот для всех клубов
+res = boxplot(data[, -1], main = "Боксплот оценок клубов", las = 2, 
+              cex.axis = 0.8, ylab = "Оценка", col = "lightgreen", 
+              par(mar = c(8, 4, 4, 2)))
+title(xlab = "Клубы", line = 4)
+res
+
+
+# Сортировка данных по оценке клуба Краснодар
+sorted_data <- data[order(data$Краснодар, decreasing = TRUE), ]
+print("Данные, отсортированные по рейтингу клуба Краснодар:")
+print(sorted_data)
+
+# Фильтрация данных
+subdataset <- subset(data, Краснодар > 7)
+print("Subdataset (Краснодар > 7):")
+print(subdataset)
+
+# Размерность новой таблицы
+print("Размерность subdataset:")
+print(dim(subdataset))
+
+# Описательные статистики
+summary_subdataset <- summary(subdataset[, -1])
+print("Описательные статистики для subdataset:")
+print(summary_subdataset)
+
+sd_values_sdst <- apply(subdataset[, -1], 2, sd, na.rm = TRUE)
+disperion_values_sdst <- apply(subdataset[, -1], 2, var, na.rm = TRUE)
+IQR_values_sdst <- apply(subdataset[, -1], 2, IQR, na.rm = TRUE)
+
+print("Стандартное отклонение:")
+print(sd_values_sdst)
+print("Дисперсия:")
+print(disperion_values_sdst)
+print("Межквартильный размах:")
+print(IQR_values_sdst)
+
+general_data_subdataset = unlist(subdataset[, -1])
+
+# Гистограмма для всех клубов
+hist(general_data_subdataset, main = "Гистограмма оценок для клубов из subdataset", 
+     xlab = "Оценка", ylab = "Частота", col = "lightblue")
+
+# Гистограмма для клуба Краснодар в subdataset
+hist(subdataset$Краснодар, main = "Гистограмма оценок для Краснодара (Оценки > 7)", 
+     xlab = "Оценка", ylab = "Частота", col = "lightblue", breaks = 2) #breaks - количество бинов
+
+# Боксплот для клубов в subdataset
+boxplot(subdataset[, -1], las = 2, cex.axis = 0.8,
+        main = "Боксплот оценок клуба Краснодар (Оценки > 7)", 
+        ylab = "Оценка", col = "lightgreen", par(mar = c(8, 4, 4, 2)))
+title(xlab = "Клубы", line = 4)
+
+# Фильтрация данных
+subdataset_less <- subset(data, Зенит < 3)
+print("Subdataset (Зенит < 3):")
+print(subdataset_less)
+
+# Размерность новой таблицы
+print("Размерность subdataset_less:")
+print(dim(subdataset_less))
+
+# Описательные статистики
+summary_subdataset_less <- summary(subdataset_less[, -1])
+print("Описательные статистики для subdataset_less:")
+print(summary_subdataset_less)
+
+
+sd_values_sdst_less <- apply(subdataset_less[, -1], 2, sd, na.rm = TRUE)
+disperion_values_sdst_less <- apply(subdataset_less[, -1], 2, var, na.rm = TRUE)
+IQR_values_sdst_less <- apply(subdataset_less[, -1], 2, IQR, na.rm = TRUE)
+
+print("Стандартное отклонение:")
+print(sd_values_sdst_less)
+print("Дисперсия:")
+print(disperion_values_sdst_less)
+print("Межквартильный размах:")
+print(IQR_values_sdst_less)
+
+general_data_subdataset_less = unlist(subdataset_less[, -1])
+
+# Гистограмма для всех клубов
+hist(general_data_subdataset_less, main = "Гистограмма оценок для клубов из subdataset_less", 
+     xlab = "Оценка", ylab = "Частота", col = "lightblue")
+
+# Гистограмма для клуба Зенит в subdataset
+hist(subdataset_less$Зенит, main = "Гистограмма оценок для Зенита (Оценки < 3)", 
+     xlab = "Оценка", ylab = "Частота", col = "lightblue", breaks = 2)
+
+# Боксплот для клубов в subdataset
+boxplot(subdataset_less[, -1], las = 2, cex.axis = 0.8,
+        main = "Боксплот оценок клуба Зенит (Оценки < 3)", 
+        ylab = "Оценка", col = "lightgreen", par(mar = c(8, 4, 4, 2)))
+title(xlab = "Клубы", line = 4)
+
+
+
+# Создаем новую строку
+new_student <- data.frame(Фамилия = "Новый студент", Краснодар = 8, Зенит = 7, Спартак = 6,
+                          Ливерпуль = 6, Манчестер.Сити = 5, Манчестер.Юнайтед = 5,
+                          Арсенал = 7, Челси = 7, ЦСКА = 6, Динамо = 6, Ювентус = 4,
+                          Наполи = 7, Реал.Мадрид = 9, Барселона = 9, ПСЖ = 8)
+
+# Добавляем новую строку в таблицу
+data <- rbind(data, new_student)
+print("Таблица после добавления новой строки:")
+print(tail(data))
+
+
+#Исключение переменных
+# Исключение столбца "Зенит"
+data_without_zenit <- data[, !(names(data) %in% c("Зенит"))]
+print("Таблица после исключения столбца 'Зенит':")
+print(data_without_zenit)
+
+#Объединение датафреймов
+# Создаём первый датафрейм
+df1 <- data.frame(
+  ID = c(1, 2, 3, 4),
+  Name = c("Александра", "Андрей", "Дмитрий", "Михаил"),
+  Age = c(25, 30, 35, 40)
+)
+
+# Создаём второй датафрейм
+df2 <- data.frame(
+  ID = c(1, 2, 3, 5),
+  City = c("Краснодар", "Москва", "Новосибирск", "Екатеринбург"),
+  Salary = c(50000, 60000, 70000, 80000)
+)
+
+print("Датафрейм 1:")
+print(df1)
+
+print("Датафрейм 2:")
+print(df2)
+
+merged_df <- merge(df1, df2, by = "ID")
+
+print("Результат слияния:")
+print(merged_df)
