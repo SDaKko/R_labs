@@ -1,0 +1,319 @@
+library(openxlsx)
+
+data_gr1 <- read.xlsx("data.xlsx", sheet = 1, rows = 1:9, cols = 1:2)
+data_gr1
+
+par(cex.main = 0.8)
+# Построение столбчатой диаграммы
+barplot(data_gr1$number_of_places,
+        names.arg = data_gr1$years,
+        col = "lightgreen",     
+        main = "Столбчатая диаграмма по количеству мест (1-8) за последние 30 лет", 
+        xlab = "Годы олимпиад",
+        ylab = "Количество мест"
+)
+# Возвращаем параметры графического устройства к умолчанию
+par(cex.main = 1)
+
+#Круговая диаграмма по количеству первых мест в каждой из олимпиад
+data_gr2 <- read.xlsx("data.xlsx", sheet = 1, rows = 11:19, cols = 1:2)
+data_gr2
+
+
+mycolors <- rainbow(8)
+pie(data_gr2$number_of_first, labels = data_gr2$years,
+    main = "Круговая диаграмма по количеству первых мест в каждой из олимпиад", 
+    col=mycolors)
+
+#Функциональные графики - тенденции изменения
+#количества призовых мест отдельно по мужчинам и женщинам за последние 30 лет.
+
+data_gr3 <- read.xlsx("data.xlsx", sheet = 1, rows = 21:29, cols = 1:3)
+data_gr3
+
+plot(data_gr3$years, data_gr3$men,
+     xlab = "Годы олимпиад",
+     ylab = "Количество призовых мест",
+     main = "Количество призовых мест мужчин",
+     type = "b", 
+     pch = 19,  
+     col = "blue",
+     xaxt = "n"
+)
+axis(1, at = data_gr3$years, labels = data_gr3$years)
+# Задаем цвет с прозрачностью для построения сетки
+transparent_gray <- rgb(0.8, 0.8, 0.8, alpha = 0.5) # 0.5 - 50% прозрачности
+
+abline(v = data_gr3$years, col = transparent_gray, lty = "solid") # вертикальные линии
+abline(h = seq(0, 8, by = 2), col = transparent_gray, lty = "solid") # горизонтальные линии
+
+
+plot(data_gr3$years, data_gr3$women,
+     xlab = "Годы олимпиад",
+     ylab = "Количество призовых мест",
+     main = "Количество призовых мест женщин",
+     type = "b", 
+     pch = 19,    
+     col = "blue",
+     xaxt = "n"
+)
+axis(1, at = data_gr3$years, labels = data_gr3$years)
+# Задаем цвет с прозрачностью для построения сетки
+transparent_gray <- rgb(0.8, 0.8, 0.8, alpha = 0.5) # 0.5 - 50% прозрачности
+
+abline(v = data_gr3$years, col = transparent_gray, lty = "solid") # вертикальные линии
+abline(h = c(1:6), col = transparent_gray, lty = "solid") # горизонтальные линии
+
+
+#графики изменения спортивных достижений 1) по золотым медалям 
+
+#Летние ОИ
+data_gr4 <- read.xlsx("data.xlsx", sheet = 1, rows = 32:38, cols = 1:7)
+data_gr4
+
+par(mar = c(5, 5, 4, 8))
+# Строим первый график
+plot(data_gr4$years, data_gr4$Russia, type = "b", col = "blue", ylab = "Количество золотых медалей", 
+     xlab = "Годы олимпиад", main = "Динамика количества победителей за последние шесть летних ОИ",  
+     ylim=c(5, 55), pch = 19, xaxt = "n", yaxt = "n") # xaxt = "n" скрывает стандартную ось x
+
+# Добавляем другие функции
+lines(data_gr4$years, data_gr4$USA, col = "red", type = "b", pch=19)
+lines(data_gr4$years, data_gr4$Germany, col = "green", type = "b", pch=19)
+lines(data_gr4$years, data_gr4$Britain, col = "black", type = "b", pch=19)
+lines(data_gr4$years, data_gr4$China, col = "yellow", type = "b", pch=19)
+lines(data_gr4$years, data_gr4$Australia, col = "pink", type = "b", pch=19)
+axis(1, at = data_gr4$years, labels = data_gr4$years) # at - позиции меток, labels - подписи
+axis(2, at = seq(5, 55, by = 5), las = 2)
+# Добавляем легенду
+legend(x = max(data_gr4$years) + 1, y = 57, legend = c("Russia", "USA", "Germany", "Britain", "China", "Australia"), 
+       col = c("blue", "red", "green", "black", "yellow", "pink"), lty = 1, 
+       xpd = TRUE, bty="n")
+# Задаем цвет с прозрачностью для построения сетки
+transparent_gray <- rgb(0.8, 0.8, 0.8, alpha = 0.5) # 0.5 - 50% прозрачности
+
+# Добавляем сетку с прозрачным цветом
+abline(v = data_gr4$years, col = transparent_gray, lty = "solid") # вертикальные линии
+abline(h = seq(5, 55, by = 5), col = transparent_gray, lty = "solid") # горизонтальные линии
+
+
+
+#График золотых медалей зимних ОИ
+data_gr5 <- read.xlsx("data.xlsx", sheet = 1, rows = 41:47, cols = 1:7)
+data_gr5
+
+par(mar = c(5, 5, 4, 8))
+# Строим первый график
+plot(data_gr5$years, data_gr5$Russia, type = "b", col = "blue", ylab = "Количество золотых медалей", 
+     xlab = "Годы олимпиад", main = "Динамика количества победителей за последние шесть зимних ОИ",  
+     ylim=c(0, 16), pch = 19, xaxt = "n", yaxt = "n") # xaxt = "n" скрывает стандартную ось x
+
+# Добавляем другие функции
+lines(data_gr5$years, data_gr5$USA, col = "red", type = "b", pch=19)
+lines(data_gr5$years, data_gr5$Germany, col = "green", type = "b", pch=19)
+lines(data_gr5$years, data_gr5$Canada, col = "black", type = "b", pch=19)
+lines(data_gr5$years, data_gr5$Norway, col = "yellow", type = "b", pch=19)
+lines(data_gr5$years, data_gr5$Netherlands, col = "pink", type = "b", pch=19)
+axis(1, at = data_gr5$years, labels = data_gr5$years) # at - позиции меток, labels - подписи
+axis(2, at = seq(0, 15, by = 5), las = 2)
+# Добавляем легенду
+legend(x = max(data_gr5$years) + 1, y = 16, legend = c("Russia", "USA", "Germany", "Canada", "Norway", "Netherlands"), 
+       col = c("blue", "red", "green", "black", "yellow", "pink"), lty = 1, 
+       xpd = TRUE, bty="n")
+# Задаем цвет с прозрачностью для построения сетки
+transparent_gray <- rgb(0.8, 0.8, 0.8, alpha = 0.5) # 0.5 - 50% прозрачности
+
+# Добавляем сетку с прозрачным цветом
+abline(v = data_gr5$years, col = transparent_gray, lty = "solid") # вертикальные линии
+abline(h = seq(0, 15, by = 5), col = transparent_gray, lty = "solid") # горизонтальные линии
+
+
+#2) График по призовым 3-местам по 7-и странам-призерам за последние 6 олимпиад.
+
+#Летние ОИ
+
+data_gr6 <- read.xlsx("data.xlsx", sheet = 1, rows = 50:56, cols = 1:7)
+data_gr6
+
+par(mar = c(5, 5, 4, 8))
+# Строим первый график
+plot(data_gr6$years, data_gr6$Russia, type = "b", col = "blue", ylab = "Количество призовых мест", 
+     xlab = "Годы олимпиад", main = "Динамика количества призеров за последние шесть летних ОИ",  
+     ylim=c(20, 116), pch = 19, xaxt = "n", yaxt = "n") # xaxt = "n" скрывает стандартную ось x
+
+# Добавляем другие функции
+lines(data_gr6$years, data_gr6$USA, col = "red", type = "b", pch=19)
+lines(data_gr6$years, data_gr6$Germany, col = "green", type = "b", pch=19)
+lines(data_gr6$years, data_gr6$Britain, col = "black", type = "b", pch=19)
+lines(data_gr6$years, data_gr6$China, col = "yellow", type = "b", pch=19)
+lines(data_gr6$years, data_gr6$Australia, col = "pink", type = "b", pch=19)
+axis(1, at = data_gr6$years, labels = data_gr6$years) # at - позиции меток, labels - подписи
+axis(2, at = seq(20, 116, by = 10), las = 2)
+# Добавляем легенду
+legend(x = max(data_gr6$years) + 1, y = 116, legend = c("Russia", "USA", "Germany", "Britain", "China", "Australia"), 
+       col = c("blue", "red", "green", "black", "yellow", "pink"), lty = 1, 
+       xpd = TRUE, bty="n")
+
+# Задаем цвет с прозрачностью для построения сетки
+transparent_gray <- rgb(0.8, 0.8, 0.8, alpha = 0.5) # 0.5 - 50% прозрачности
+
+# Добавляем сетку с прозрачным цветом
+abline(v = data_gr6$years, col = transparent_gray, lty = "solid") # вертикальные линии
+abline(h = seq(20, 116, by = 10), col = transparent_gray, lty = "solid") # горизонтальные линии
+
+
+#График призеров зимних ОИ
+data_gr7 <- read.xlsx("data.xlsx", sheet = 1, rows = 59:65, cols = 1:7)
+data_gr7
+
+par(mar = c(5, 5, 4, 8))
+# Строим первый график
+plot(data_gr7$years, data_gr7$Russia, type = "b", col = "blue", ylab = "Количество призовых мест", 
+     xlab = "Годы олимпиад", main = "Динамика количества призеров за последние шесть зимних ОИ",  
+     ylim=c(5, 40), pch = 19, xaxt = "n", yaxt = "n") # xaxt = "n" скрывает стандартную ось x
+
+# Добавляем другие функции
+lines(data_gr7$years, data_gr7$USA, col = "red", type = "b", pch=19)
+lines(data_gr7$years, data_gr7$Germany, col = "green", type = "b", pch=19)
+lines(data_gr7$years, data_gr7$Canada, col = "black", type = "b", pch=19)
+lines(data_gr7$years, data_gr7$Norway, col = "yellow", type = "b", pch=19)
+lines(data_gr7$years, data_gr7$Netherlands, col = "pink", type = "b", pch=19)
+axis(1, at = data_gr7$years, labels = data_gr7$years) # at - позиции меток, labels - подписи
+axis(2, at = seq(5, 40, by = 5), las = 2)
+# Добавляем легенду
+legend(x = max(data_gr7$years) + 1, y = 40, legend = c("Russia", "USA", "Germany", "Canada", "Norway", "Netherlands"), 
+       col = c("blue", "red", "green", "black", "yellow", "pink"), lty = 1, 
+       xpd = TRUE, bty="n")
+# Задаем цвет с прозрачностью для построения сетки
+transparent_gray <- rgb(0.8, 0.8, 0.8, alpha = 0.5) # 0.5 - 50% прозрачности
+
+# Добавляем сетку с прозрачным цветом
+abline(v = data_gr7$years, col = transparent_gray, lty = "solid") # вертикальные линии
+abline(h = seq(5, 40, by = 5), col = transparent_gray, lty = "solid") # горизонтальные линии
+
+
+#Динамика победителей по горнолыжному спорту
+data_gr8 <- read.xlsx("data.xlsx", sheet = 1, rows = 68:74, cols = 1:3)
+data_gr8
+
+par(mar = c(5, 5, 4, 8))
+# Строим первый график
+plot(data_gr8$years, data_gr8$men, type = "b", col = "blue", ylab = "Количество золотых медалей", 
+     xlab = "Годы олимпиад", main = "Динамика количества победителей по горнолыжному спорту",  
+     ylim=c(0, 3), pch = 19, xaxt = "n", yaxt = "n") # xaxt = "n" скрывает стандартную ось x
+# Добавляем другие функции
+lines(data_gr8$years, data_gr8$women, col = "orange", type = "b", pch=19)
+axis(1, at = data_gr8$years, labels = data_gr8$years) # at - позиции меток, labels - подписи
+axis(2, at = c(0:3), las = 2)
+# Добавляем легенду
+legend(x = max(data_gr8$years) + 1, y = 3, legend = c("men", "women"), 
+       col = c("blue", "orange"), lty = 1, 
+       xpd = TRUE, bty="n")
+# Задаем цвет с прозрачностью для построения сетки
+transparent_gray <- rgb(0.8, 0.8, 0.8, alpha = 0.5) # 0.5 - 50% прозрачности
+
+# Добавляем сетку с прозрачным цветом
+abline(v = data_gr8$years, col = transparent_gray, lty = "solid") # вертикальные линии
+abline(h = c(0:3), col = transparent_gray, lty = "solid") # горизонтальные линии
+
+par(mfrow=c(2,1), cex.main = 0.9) # будет два графика
+# Построение столбчатой диаграммы по мужчинам
+barplot(data_gr8$men,
+        names.arg = data_gr8$years,
+        col = "lightgreen",     
+        main = "Столбчатая диаграмма по количеству золотых медалей мужчин", 
+        xlab = "Годы олимпиад",
+        ylab = "Количество золотых медалей"
+)
+
+# Построение столбчатой диаграммы по женщинам
+barplot(data_gr8$women,
+        names.arg = data_gr8$years,
+        col = "lightgreen",     
+        main = "Столбчатая диаграмма по количеству золотых медалей женщин", 
+        xlab = "Годы олимпиад",
+        ylab = "Количество золотых медалей"
+)
+
+par(mfrow=c(1,2)) # будет два графика
+mycolors <- rainbow(6)
+men_data <- data_gr8$men
+men_years <- data_gr8$years
+men_years <- men_years[men_data > 0]
+men_data <- men_data[men_data > 0] # Убираем нулевые значения
+
+pie(men_data, labels = men_years,
+    main = "Круговая диаграмма по количеству первых мест мужчин", 
+    col=mycolors)
+women_data <- data_gr8$women
+women_years <- data_gr8$years
+women_years <- women_years[women_data > 0] # Соответственно изменяем года
+women_data <- women_data[women_data > 0] # Убираем нулевые значения
+
+pie(women_data, labels = women_years,
+    main = "Круговая диаграмма по количеству первых мест женщин", 
+    col=mycolors)
+
+
+#Динамика призеров по горнолыжному спорту
+data_gr9 <- read.xlsx("data.xlsx", sheet = 1, rows = 77:83, cols = 1:3)
+data_gr9
+
+par(mar = c(5, 5, 4, 8))
+# Строим первый график
+plot(data_gr9$years, data_gr9$men, type = "b", col = "blue", ylab = "Количество призовых мест", 
+     xlab = "Годы олимпиад", main = "Динамика призовых мест Австрии по горнолыжному спорту",  
+     ylim=c(0, 8), pch = 19, xaxt = "n", yaxt = "n") # xaxt = "n" скрывает стандартную ось x
+# Добавляем другие функции
+lines(data_gr9$years, data_gr9$women, col = "orange", type = "b", pch=19)
+axis(1, at = data_gr9$years, labels = data_gr9$years) # at - позиции меток, labels - подписи
+axis(2, at = c(0:8), las = 2)
+# Добавляем легенду
+legend(x = max(data_gr9$years) + 1, y = 8, legend = c("men", "women"), 
+       col = c("blue", "orange"), lty = 1, 
+       xpd = TRUE, bty="n")
+# Задаем цвет с прозрачностью для построения сетки
+transparent_gray <- rgb(0.8, 0.8, 0.8, alpha = 0.5) # 0.5 - 50% прозрачности
+
+# Добавляем сетку с прозрачным цветом
+abline(v = data_gr9$years, col = transparent_gray, lty = "solid") # вертикальные линии
+abline(h = c(0:8), col = transparent_gray, lty = "solid") # горизонтальные линии
+
+
+par(mfrow=c(2,1), cex.main = 0.9) # будет два графика
+# Построение столбчатой диаграммы по мужчинам
+barplot(data_gr9$men,
+        names.arg = data_gr9$years,
+        col = "lightgreen",     
+        main = "Столбчатая диаграмма по количеству призеров мужчин", 
+        xlab = "Годы олимпиад",
+        ylab = "Количество призовых мест"
+)
+
+# Построение столбчатой диаграммы по женщинам
+barplot(data_gr9$women,
+        names.arg = data_gr9$years,
+        col = "lightgreen",     
+        main = "Столбчатая диаграмма по количеству призеров женщин", 
+        xlab = "Годы олимпиад",
+        ylab = "Количество призовых мест"
+)
+
+par(mfrow=c(1,2)) # будет два графика
+mycolors <- rainbow(6)
+men_data <- data_gr9$men
+men_years <- data_gr9$years
+men_years <- men_years[men_data > 0]
+men_data <- men_data[men_data > 0] # Убираем нулевые значения
+
+pie(men_data, labels = men_years,
+    main = "Круговая диаграмма по количеству призовых мест мужчин", 
+    col=mycolors)
+women_data <- data_gr9$women
+women_years <- data_gr9$years
+women_years <- women_years[women_data > 0] # Соответственно изменяем года
+women_data <- women_data[women_data > 0] # Убираем нулевые значения
+
+pie(women_data, labels = women_years,
+    main = "Круговая диаграмма по количеству призовых мест женщин", 
+    col=mycolors)
